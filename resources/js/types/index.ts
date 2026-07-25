@@ -1,5 +1,22 @@
 import { LucideIcon } from 'lucide-react';
 
+export interface Link {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
+
+export interface ResponsePagination<T> {
+    data: T[];
+    links: Link[];
+    // current_page: number;
+    // last_page: number;
+    // per_page: number;
+    // total: number;
+    // from: number | null;
+    // to: number | null;
+}
+
 export interface Auth {
     user: User;
 }
@@ -21,10 +38,17 @@ export interface NavItem {
     isActive?: boolean;
 }
 
+export interface Flash {
+    success?: string;
+    error?: string;
+}
+
 export interface SharedData {
     name: string;
     quote: { message: string; author: string };
     auth: Auth;
+    today: string;
+    flash: Flash;
     [key: string]: unknown;
 }
 
