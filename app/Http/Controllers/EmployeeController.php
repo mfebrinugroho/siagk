@@ -8,6 +8,9 @@ use Inertia\Inertia;
 
 class EmployeeController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
     {
         $search = $request->string('search');
@@ -30,11 +33,17 @@ class EmployeeController extends Controller
         ]);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
         return Inertia::render('employees/create');
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -62,6 +71,9 @@ class EmployeeController extends Controller
             ->with('success', 'Data karyawan berhasil ditambahkan.');
     }
 
+    /**
+     * Display the specified resource.
+     */
     public function show(Employee $employee)
     {
         return Inertia::render('employees/show', [
@@ -69,6 +81,9 @@ class EmployeeController extends Controller
         ]);
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit(Employee $employee)
     {
         return Inertia::render('employees/edit', [
@@ -76,6 +91,9 @@ class EmployeeController extends Controller
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(Request $request, Employee $employee)
     {
         $validated = $request->validate([
@@ -103,6 +121,9 @@ class EmployeeController extends Controller
             ->with('success', 'Data karyawan berhasil diperbarui.');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy(Employee $employee)
     {
         $employee->delete();
