@@ -40,7 +40,7 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'name' => "required|min:3",
             'gender' => "string|nullable",
-            'place_birth' => "string|nullable",
+            'pob' => "string|nullable",
             'dob' => "string|nullable",
             'religion' => "string|nullable",
             'education' => "string|nullable",
@@ -60,5 +60,55 @@ class EmployeeController extends Controller
         return redirect()
             ->route('employees.index')
             ->with('success', 'Data karyawan berhasil ditambahkan.');
+    }
+
+    public function show(Employee $employee)
+    {
+        return Inertia::render('employees/show', [
+            'employee' => $employee,
+        ]);
+    }
+
+    public function edit(Employee $employee)
+    {
+        return Inertia::render('employees/edit', [
+            'employee' => $employee,
+        ]);
+    }
+
+    public function update(Request $request, Employee $employee)
+    {
+        $validated = $request->validate([
+            'name' => "required|min:3",
+            'gender' => "string|nullable",
+            'pob' => "string|nullable",
+            'dob' => "string|nullable",
+            'religion' => "string|nullable",
+            'education' => "string|nullable",
+            'address' => "string|nullable",
+            'phone_number' => "required|min:11",
+            'position' => "required|min:3",
+            'marital_status' => "string|nullable",
+            'pay_date' => "required|integer|min:1",
+            'salary' => "required|numeric|min:1",
+            'days_off' => "nullable|integer",
+        ]);
+
+        $validated['is_active'] = true;
+
+        $employee->update($validated);
+
+        return redirect()
+            ->route('employees.index')
+            ->with('success', 'Data karyawan berhasil diperbarui.');
+    }
+
+    public function destroy(Employee $employee)
+    {
+        $employee->delete();
+
+        return redirect()
+            ->route('employees.index')
+            ->with('success', 'Data karyawan berhasil dihapus.');
     }
 }

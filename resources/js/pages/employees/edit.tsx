@@ -1,8 +1,13 @@
-import CreateEmployeeForm from '@/components/form/employee/create-employee-form';
+import EditEmployeeForm from '@/components/form/employee/edit-employee-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
+import { Employee } from '@/types/employee';
 import { Head } from '@inertiajs/react';
+
+interface Props {
+    employee: Employee;
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -10,12 +15,12 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/employees',
     },
     {
-        title: 'Tambah Data Karyawan',
-        href: '/employees/create',
+        title: 'Ubah Data Karyawan',
+        href: '/employees/edit',
     },
 ];
 
-const Create = () => {
+const Edit = ({ employee }: Props) => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Tambah Data Karyawan" />
@@ -25,7 +30,7 @@ const Create = () => {
                         <CardTitle>Tambah Data Karyawan</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <CreateEmployeeForm />
+                        <EditEmployeeForm employee={employee} />
                     </CardContent>
                 </Card>
             </div>
@@ -33,4 +38,4 @@ const Create = () => {
     );
 };
 
-export default Create;
+export default Edit;

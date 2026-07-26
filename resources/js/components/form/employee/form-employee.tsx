@@ -4,56 +4,23 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
-import { EmployeeForm, employeeSchema } from '@/schemas/employees.schemas';
+import { EmployeeForm } from '@/schemas/employees.schemas';
 import { Link, useForm } from '@inertiajs/react';
 import { format, parseISO } from 'date-fns';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-const CreateForm = () => {
-    // const [date, setDate] = React.useState<Date>();
+interface EmployeeFormProps {
+    form: ReturnType<typeof useForm<EmployeeForm>>;
+    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+}
+
+const FormEmployee = ({ form, onSubmit }: EmployeeFormProps) => {
     const [openDate, setOpenDate] = useState(false);
-    const [date, setDate] = React.useState<Date | undefined>(undefined);
-
-    const form = useForm<EmployeeForm>({
-        name: '',
-        gender: '',
-        place_birth: '',
-        dob: '',
-        religion: '',
-        education: '',
-        address: '',
-        phone_number: '',
-        position: '',
-        marital_status: '',
-        pay_date: '',
-        salary: '',
-        days_off: '',
-    });
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const result = employeeSchema.safeParse(form.data);
-
-        if (!result.success) {
-            form.clearErrors();
-
-            const errors = result.error.flatten().fieldErrors;
-
-            Object.entries(errors).forEach(([field, messages]) => {
-                if (messages?.length) {
-                    form.setError(field as keyof EmployeeForm, messages[0]);
-                }
-            });
-
-            return;
-        }
-
-        form.post(route('employees.store'));
-    };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={onSubmit}>
             <FieldGroup>
                 <div className="grid grid-cols-2 gap-4">
                     <Field data-invalid={!!form.errors.name}>
@@ -83,17 +50,17 @@ const CreateForm = () => {
                     </Field>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                    <Field data-invalid={!!form.errors.place_birth}>
-                        <FieldLabel htmlFor="place_birth">Tempat Lahir</FieldLabel>
+                    <Field data-invalid={!!form.errors.pob}>
+                        <FieldLabel htmlFor="pob">Tempat Lahir</FieldLabel>
                         <Input
-                            id="place_birth"
+                            id="pob"
                             type="text"
-                            value={form.data.place_birth}
-                            onChange={(e) => form.setData('place_birth', e.target.value)}
-                            aria-invalid={!!form.errors.place_birth}
+                            value={form.data.pob}
+                            onChange={(e) => form.setData('pob', e.target.value)}
+                            aria-invalid={!!form.errors.pob}
                             placeholder="Tempat Lahir"
                         />
-                        {form.errors.place_birth && <FieldError errors={[{ message: form.errors.place_birth }]} />}
+                        {form.errors.pob && <FieldError errors={[{ message: form.errors.pob }]} />}
                     </Field>
                     <Field data-invalid={!!form.errors.dob}>
                         <FieldLabel htmlFor="dob">Tanggal Lahir</FieldLabel>
@@ -248,6 +215,7 @@ const CreateForm = () => {
                     <Link href={route('employees.index')}>Kembali</Link>
                 </Button>
                 <Button type="submit" size="lg" className="cursor-pointer px-8 py-4" disabled={form.processing}>
+                    {form.processing && <Spinner data-icon="inline-start" className="text-center" />}
                     {form.processing ? 'Menyimpan...' : 'Simpan'}
                 </Button>
             </div>
@@ -255,4 +223,4 @@ const CreateForm = () => {
     );
 };
 
-export default CreateForm;
+export default FormEmployee;

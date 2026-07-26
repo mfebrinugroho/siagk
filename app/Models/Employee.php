@@ -10,7 +10,7 @@ class Employee extends Model
     protected $fillable = [
         'name',
         'gender',
-        'place_birth',
+        'pob',
         'dob',
         'religion',
         'education',

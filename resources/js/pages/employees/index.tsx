@@ -2,6 +2,16 @@ import ListEmployee from '@/components/table/employee/list-employee';
 import PaginationTable from '@/components/table/pagination-table';
 import PerPageInput from '@/components/table/per-page-input';
 import SearchInput from '@/components/table/search-input';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
@@ -25,6 +35,8 @@ type Props = {
 };
 
 const Index = ({ employees, filters }: Props) => {
+    const [openDel, setOpenDel] = useState(false);
+    const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
     const [search, setSearch] = useState(filters.search ?? '');
 
     useEffect(() => {
@@ -43,6 +55,23 @@ const Index = ({ employees, filters }: Props) => {
 
         return () => clearTimeout(timeout);
     }, [search]);
+
+    const handleOpenDelete = (employee: Employee) => {
+        setSelectedEmployee(employee);
+        setOpenDel(true);
+    };
+
+    const handleDelete = () => {
+        if (!selectedEmployee) return;
+
+        router.delete(route('employees.destroy', selectedEmployee.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                setOpenDel(false);
+                setSelectedEmployee(null);
+            },
+        });
+    };
 
     return (
         <>
@@ -63,11 +92,31 @@ const Index = ({ employees, filters }: Props) => {
                                 <PerPageInput />
                                 <SearchInput value={search} onChange={setSearch} />
                             </div>
-                            <ListEmployee employees={employees.data} />
+                            <ListEmployee employees={employees.data} onDelete={handleOpenDelete} />
                             <PaginationTable links={employees.links} />
                         </CardContent>
                     </Card>
                 </div>
+
+                <AlertDialog open={openDel} onOpenChange={setOpenDel}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Hapus Data</AlertDialogTitle>
+
+                            <AlertDialogDescription>
+                                Yakin ingin menghapus <strong>{selectedEmployee?.name}</strong>?
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+
+                        <AlertDialogFooter>
+                            <AlertDialogCancel className="cursor-pointer">Batal</AlertDialogCancel>
+
+                            <AlertDialogAction onClick={handleDelete} className="cursor-pointer">
+                                Hapus
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </AppLayout>
         </>
     );

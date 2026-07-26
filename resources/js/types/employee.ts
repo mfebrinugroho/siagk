@@ -2,7 +2,7 @@ export interface Employee {
     id: number;
     name: string;
     gender: string;
-    place_birth: string;
+    pob: string;
     dob: string;
     religion: string;
     education: string;
@@ -11,6 +11,7 @@ export interface Employee {
     marital_status: string;
     position: string;
     pay_date: number;
+    salary: number;
     salary_formatted: number;
     is_active: boolean;
     days_off: string;

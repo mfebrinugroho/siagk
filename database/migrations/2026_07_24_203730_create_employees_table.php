@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255);
             $table->string('gender', 1)->nullable();
-            $table->string('place_birth', 255)->nullable();
+            $table->string('pob', 255)->nullable();
             $table->date('dob')->nullable();
             $table->string('religion', 20)->nullable();
             $table->string('education', 125)->nullable();

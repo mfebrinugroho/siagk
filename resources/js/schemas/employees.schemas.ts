@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const employeeSchema = z.object({
     name: z.string().min(3, 'Nama minimal 3 karakter'),
     gender: z.string().optional(),
-    place_birth: z.string().optional(),
+    pob: z.string().optional(),
     dob: z.string().optional(),
     religion: z.string().optional(),
     education: z.string().optional(),
