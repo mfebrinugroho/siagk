@@ -1,13 +1,15 @@
-import AppLogoIcon from './app-logo-icon';
+import { SharedData } from '@/types';
+import { usePage } from '@inertiajs/react';
 
 export default function AppLogo() {
+    const { appLogo } = usePage<SharedData>().props;
     return (
         <>
-            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
-                <AppLogoIcon className="size-5 fill-current text-white dark:text-black" />
+            <div className="text-sidebar-primary-foreground flex aspect-square size-10 items-center justify-center rounded-md">
+                <img src={appLogo} alt="Logo" className="w-44" />
             </div>
-            <div className="ml-1 grid flex-1 text-left text-sm">
-                <span className="mb-0.5 truncate leading-none font-semibold">Laravel Starter Kit</span>
+            <div className="ml-1 grid flex-1 text-left text-xl">
+                <span className="mb-0.5 truncate leading-none font-semibold">PJK</span>
             </div>
         </>
     );

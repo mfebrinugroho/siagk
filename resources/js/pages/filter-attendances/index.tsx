@@ -181,11 +181,9 @@ const Index = ({ attendances, employees, start_date, end_date, summary, filters 
                             />
 
                             <Field>
-                                {/* <FieldLabel>Tanggal Awal</FieldLabel> */}
-
                                 <Popover open={openDate} onOpenChange={setOpenDate}>
                                     <PopoverTrigger asChild>
-                                        <Button variant="outline" className="p-5">
+                                        <Button variant="outline" className="cursor-pointer p-5">
                                             {range?.from
                                                 ? range.to
                                                     ? `${format(range.from, 'dd/MM/yyyy')} - ${format(range.to, 'dd/MM/yyyy')}`
@@ -199,7 +197,7 @@ const Index = ({ attendances, employees, start_date, end_date, summary, filters 
                                     </PopoverContent>
                                 </Popover>
                             </Field>
-                            <Button onClick={handleFilter} className="p-5">
+                            <Button onClick={handleFilter} className="cursor-pointer p-5">
                                 Filter Absensi
                             </Button>
                         </div>

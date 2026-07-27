@@ -49,6 +49,7 @@ export interface SharedData {
     auth: Auth;
     today: string;
     flash: Flash;
+    appLogo: string;
     [key: string]: unknown;
 }
 

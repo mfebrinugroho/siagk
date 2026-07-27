@@ -33,7 +33,7 @@ export default function SearchSelect<T>({
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <Button variant="outline" className="!bg-popover flex w-full items-center justify-between p-6" disabled={disabled}>
+                <Button variant="outline" className="!bg-popover flex w-full cursor-pointer items-center justify-between p-6" disabled={disabled}>
                     {value ? getLabel(value) : placeholder}
 
                     <ChevronDownIcon />

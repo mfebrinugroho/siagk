@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    return auth()->check()
+        ? to_route('dashboard')
+        : to_route('login');
 })->name('home');
 
 Route::middleware(['auth'])->group(function () {
