@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FilterAttendanceController;
 use Illuminate\Support\Facades\Route;
@@ -13,9 +14,9 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
 
     Route::resource('employees', EmployeeController::class);
     Route::resource('attendances', AttendanceController::class);
