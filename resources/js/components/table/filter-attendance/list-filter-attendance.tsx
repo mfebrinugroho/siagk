@@ -10,7 +10,7 @@ import { Pen, Trash } from 'lucide-react';
 interface Props {
     attendances: Attendance[];
     from: number;
-    salary: number | undefined;
+    salary?: number;
     summary: {
         total_surplus: number;
         total_minus: number;
@@ -18,9 +18,14 @@ interface Props {
     };
     onDelete: (attendance: Attendance) => void;
     loading: boolean;
+    query: {
+        employee_id?: number;
+        start_date?: string;
+        end_date?: string;
+    };
 }
 
-const ListAttendance = ({ attendances, from, salary, summary, onDelete, loading }: Props) => {
+const ListFilterAttendance = ({ attendances, from, salary = 0, summary, onDelete, loading, query }: Props) => {
     const headerColumns = [
         { key: 'number', label: '#' },
         { key: 'description', label: 'Keterangan' },
@@ -69,7 +74,7 @@ const ListAttendance = ({ attendances, from, salary, summary, onDelete, loading 
                                             className="cursor-pointer bg-amber-500/60 dark:bg-amber-500/40"
                                             asChild
                                         >
-                                            <Link href={route('attendances.edit', attendance.id)}>
+                                            <Link href={route('filter-attendances.edit', { filter_attendance: attendance.id, ...query })}>
                                                 <Pen />
                                             </Link>
                                         </Button>
@@ -127,4 +132,4 @@ const ListAttendance = ({ attendances, from, salary, summary, onDelete, loading 
     );
 };
 
-export default ListAttendance;
+export default ListFilterAttendance;

@@ -14,9 +14,14 @@ import { useState } from 'react';
 interface AttendanceFormProps {
     form: ReturnType<typeof useForm<AttendanceForm>>;
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    query: {
+        employee_id: number;
+        start_date: string;
+        end_date: string;
+    };
 }
 
-const FormAttendance = ({ form, onSubmit }: AttendanceFormProps) => {
+const FormFilterAttendance = ({ form, onSubmit, query }: AttendanceFormProps) => {
     const [openDate, setOpenDate] = useState(false);
 
     return (
@@ -140,13 +145,7 @@ const FormAttendance = ({ form, onSubmit }: AttendanceFormProps) => {
             </FieldGroup>
             <div className="mt-4 flex items-center justify-center gap-4">
                 <Button size="lg" variant="outline" className="px-8 py-4" asChild>
-                    <Link
-                        href={route('attendances.index', {
-                            employee_id: form.data.employee_id,
-                        })}
-                    >
-                        Kembali
-                    </Link>
+                    <Link href={route('filter-attendances.index', query)}>Kembali</Link>
                 </Button>
                 <Button type="submit" size="lg" className="cursor-pointer px-8 py-4" disabled={form.processing}>
                     {form.processing && <Spinner data-icon="inline-start" className="text-center" />}
@@ -157,4 +156,4 @@ const FormAttendance = ({ form, onSubmit }: AttendanceFormProps) => {
     );
 };
 
-export default FormAttendance;
+export default FormFilterAttendance;

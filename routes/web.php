@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\FilterAttendanceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -16,6 +17,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('employees', EmployeeController::class);
     Route::resource('attendances', AttendanceController::class);
+    Route::resource('filter-attendances', FilterAttendanceController::class);
 });
 
 require __DIR__ . '/settings.php';

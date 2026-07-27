@@ -23,6 +23,11 @@ const mainNavItems: NavItem[] = [
         url: route('attendances.index'),
         icon: Calendar,
     },
+    {
+        title: 'Filter Absensi',
+        url: route('filter-attendances.index'),
+        icon: Calendar,
+    },
 ];
 
 const footerNavItems: NavItem[] = [

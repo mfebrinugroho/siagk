@@ -7,33 +7,14 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class AttendanceController extends Controller
+class FilterAttendanceController extends Controller
 {
-    private function payrollPeriod(int $payday): array
-    {
-        $today = now();
-
-        if ($today->day > $payday) {
-            $start = $today->copy()->day($payday + 1)->startOfDay();
-            $end = $today->copy()->addMonth()->day($payday)->endOfDay();
-        } else {
-            $start = $today->copy()->subMonth()->day($payday + 1)->startOfDay();
-            $end = $today->copy()->day($payday)->endOfDay();
-        }
-
-        return [$start, $end];
-    }
-
-
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $search = $request->string('search');
         $perPage = $request->integer('per_page', 10);
-        $start = null;
-        $end = null;
+        $start_date = $request->string('start_date');
+        $end_date = $request->string('end_date');
 
         $employees = Employee::select('id', 'name', 'position', 'pay_date', 'salary')
             ->orderBy('name')
@@ -47,10 +28,8 @@ class AttendanceController extends Controller
         $totalMinus = 0;
 
         if ($employee) {
-            [$start, $end] = $this->payrollPeriod($employee->pay_date);
-
             $query->where('employee_id', $employee->id)
-                ->whereBetween('date', [$start, $end]);
+                ->whereBetween('date', [$start_date, $end_date]);
 
             // Hitung summary dari SELURUH data
             $summaryQuery = clone $query;
@@ -77,11 +56,11 @@ class AttendanceController extends Controller
             ->paginate($perPage)
             ->withQueryString();
 
-        return Inertia::render('attendances/index', [
+        return Inertia::render('filter-attendances/index', [
             'attendances' => $attendances,
             'employees' => $employees,
-            'start_date' => $start,
-            'end_date' => $end,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
             'summary' => [
                 'total_surplus' => $totalSurplus,
                 'total_minus' => $totalMinus,
@@ -93,6 +72,8 @@ class AttendanceController extends Controller
                 'employee_id' => $request->integer('employee_id'),
                 'search' => $search,
                 'per_page' => $perPage,
+                'start_date' => $start_date,
+                'end_date' => $end_date,
             ],
         ]);
     }
@@ -103,13 +84,17 @@ class AttendanceController extends Controller
     public function create(Request $request)
     {
         $employee = null;
+        $start_date = $request->string('start_date');
+        $end_date = $request->string('end_date');
 
         if ($request->filled('employee_id')) {
             $employee = Employee::find($request->integer('employee_id'));
         }
 
-        return Inertia::render('attendances/create', [
+        return Inertia::render('filter-attendances/create', [
             'employee' => $employee,
+            'start_date' => $start_date,
+            'end_date' => $end_date
         ]);
     }
 
@@ -129,8 +114,10 @@ class AttendanceController extends Controller
         Attendance::create($validated);
 
         return redirect()
-            ->route('attendances.index', [
+            ->route('filter-attendances.index', [
                 'employee_id' => $request->employee_id,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
             ])
             ->with('success', 'Data absensi berhasil ditambahkan.');
     }
@@ -146,19 +133,24 @@ class AttendanceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Attendance $attendance)
+    public function edit(Request $request, Attendance $filter_attendance)
     {
-        $attendance->load('employee');
+        $filter_attendance->load('employee');
 
-        return Inertia::render('attendances/edit', [
-            'attendance' => $attendance,
+        return Inertia::render('filter-attendances/edit', [
+            'attendance' => $filter_attendance,
+            'query' => [
+                'employee_id' => $filter_attendance->employee_id,
+                'start_date' => $request->string('start_date')->toString(),
+                'end_date' => $request->string('end_date')->toString(),
+            ],
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Attendance $attendance)
+    public function update(Request $request, Attendance $filter_attendance)
     {
         $validated = $request->validate([
             'employee_id' => "required",
@@ -168,11 +160,13 @@ class AttendanceController extends Controller
             'amount' => "required|numeric",
         ]);
 
-        $attendance->update($validated);
+        $filter_attendance->update($validated);
 
         return redirect()
-            ->route('attendances.index', [
+            ->route('filter-attendances.index', [
                 'employee_id' => $request->employee_id,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
             ])
             ->with('success', 'Data absensi berhasil diperbarui.');
     }
@@ -180,13 +174,15 @@ class AttendanceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Attendance $attendance)
+    public function destroy(Request $request, Attendance $filter_attendance)
     {
-        $attendance->delete();
+        $filter_attendance->delete();
 
         return redirect()
-            ->route('attendances.index', [
+            ->route('filter-attendances.index', [
                 'employee_id' => $request->employee_id,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
             ])
             ->with('success', 'Data absensi berhasil dihapus.');
     }
