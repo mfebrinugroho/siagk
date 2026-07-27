@@ -30,3 +30,10 @@ export function payDate(tanggal: number) {
         year: 'numeric',
     }).format(full_date);
 }
+
+export const formatDate = (date: string) =>
+    new Intl.DateTimeFormat('id-ID', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+    }).format(new Date(date));

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -13,8 +14,8 @@ Route::middleware(['auth'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
-    // Route::get('employees', [EmployeeController::class, 'index'])->name('employees');
     Route::resource('employees', EmployeeController::class);
+    Route::resource('attendances', AttendanceController::class);
 });
 
 require __DIR__ . '/settings.php';

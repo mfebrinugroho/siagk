@@ -41,7 +41,7 @@ const FormEmployee = ({ form, onSubmit }: EmployeeFormProps) => {
                             <SelectTrigger aria-invalid={!!form.errors.gender} id="gender">
                                 <SelectValue placeholder="Pilih Jenis Kelamin" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent position="popper">
                                 <SelectItem value="L">Laki - Laki</SelectItem>
                                 <SelectItem value="P">Perempuan</SelectItem>
                             </SelectContent>

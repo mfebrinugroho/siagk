@@ -30,31 +30,50 @@ const breadcrumbs: BreadcrumbItem[] = [
 type Props = {
     employees: ResponsePagination<Employee>;
     filters: {
-        search: string;
+        search?: string;
+        per_page?: number;
     };
 };
 
 const Index = ({ employees, filters }: Props) => {
+    const { data, links } = employees;
     const [openDel, setOpenDel] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
     const [search, setSearch] = useState(filters.search ?? '');
+    const [perPage, setPerPage] = useState(filters.per_page ?? 10);
+
+    const fetchEmployees = (params: Partial<typeof filters> = {}) => {
+        router.get(
+            route('employees.index'),
+            {
+                ...(params.search ? { search: params.search } : {}),
+                ...(params.per_page && params.per_page !== 10 ? { per_page: params.per_page } : {}),
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+            },
+        );
+    };
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            const params: Record<string, string | number> = {};
-
-            if (search.trim()) {
-                params.search = search;
-            }
-
-            router.get(route('employees.index'), params, {
-                preserveState: true,
-                replace: true,
+            fetchEmployees({
+                search,
             });
         }, 300);
 
         return () => clearTimeout(timeout);
     }, [search]);
+
+    const handlePerPage = (value: number) => {
+        setPerPage(value);
+
+        fetchEmployees({
+            per_page: value,
+        });
+    };
 
     const handleOpenDelete = (employee: Employee) => {
         setSelectedEmployee(employee);
@@ -89,11 +108,11 @@ const Index = ({ employees, filters }: Props) => {
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <div className="flex w-full items-center justify-between">
-                                <PerPageInput />
+                                <PerPageInput value={perPage} onChange={handlePerPage} />
                                 <SearchInput value={search} onChange={setSearch} />
                             </div>
-                            <ListEmployee employees={employees.data} onDelete={handleOpenDelete} />
-                            <PaginationTable links={employees.links} />
+                            <ListEmployee employees={data} onDelete={handleOpenDelete} />
+                            <PaginationTable links={links} />
                         </CardContent>
                     </Card>
                 </div>

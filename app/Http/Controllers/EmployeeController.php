@@ -14,7 +14,7 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
         $search = $request->string('search');
-        $perPage = $request->integer('per_page', 5);
+        $perPage = $request->integer('per_page', 10);
 
         $employees = Employee::query()
             ->when($search, function ($query, $search) {

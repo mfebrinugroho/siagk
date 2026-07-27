@@ -7,14 +7,14 @@ export interface Link {
 }
 
 export interface ResponsePagination<T> {
+    current_page: number;
     data: T[];
+    from: number;
+    last_page: number;
     links: Link[];
-    // current_page: number;
-    // last_page: number;
-    // per_page: number;
-    // total: number;
-    // from: number | null;
-    // to: number | null;
+    per_page: number;
+    to: number;
+    total: number;
 }
 
 export interface Auth {

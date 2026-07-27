@@ -1,11 +1,16 @@
 import { Field, FieldLabel } from '../ui/field';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
-const PerPageInput = () => {
+interface PerPageInputProps {
+    value: number;
+    onChange: (value: number) => void;
+}
+
+const PerPageInput = ({ value, onChange }: PerPageInputProps) => {
     return (
         <Field orientation="horizontal" className="w-fit">
             <FieldLabel htmlFor="select-rows-per-page">Show</FieldLabel>
-            <Select defaultValue="25">
+            <Select value={value.toString()} onValueChange={(value) => onChange(Number(value))}>
                 <SelectTrigger className="w-20" id="select-rows-per-page">
                     <SelectValue />
                 </SelectTrigger>
