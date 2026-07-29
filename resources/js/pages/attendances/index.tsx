@@ -57,12 +57,17 @@ const breadcrumbs: BreadcrumbItem[] = [
 const Index = ({ attendances, employees, start_date, end_date, summary, filters }: Props) => {
     const { data, links, from } = attendances;
     const [selectedEmployee, setSelectedEmployee] = useState<EmployeeProps | null>(employees.find((e) => e.id === filters.employee_id) ?? null);
-    // const selectedEmployee = employees.find((e) => e.id === filters.employee_id) ?? null;
     const [search, setSearch] = useState(filters.search ?? '');
     const [perPage, setPerPage] = useState(filters.per_page ?? 10);
     const [loading, setLoading] = useState(false);
     const [openDel, setOpenDel] = useState(false);
     const [selectedAttendance, setSelectedAttendance] = useState<Attendance | null>(null);
+
+    const queryParams = {
+        employee_id: selectedEmployee?.id,
+        search,
+        per_page: perPage,
+    };
 
     const fetchAttendances = (params: Partial<typeof filters> = {}) => {
         router.get(
@@ -82,9 +87,19 @@ const Index = ({ attendances, employees, start_date, end_date, summary, filters 
         );
     };
 
+    const handleEmployeeChange = (employee: EmployeeProps) => {
+        setSelectedEmployee(employee);
+
+        fetchAttendances({
+            ...queryParams,
+            employee_id: employee.id,
+        });
+    };
+
     useEffect(() => {
         const timeout = setTimeout(() => {
             fetchAttendances({
+                ...queryParams,
                 search,
             });
         }, 300);
@@ -92,18 +107,11 @@ const Index = ({ attendances, employees, start_date, end_date, summary, filters 
         return () => clearTimeout(timeout);
     }, [search]);
 
-    const handleFilter = (employee: EmployeeProps) => {
-        setSelectedEmployee(employee);
-
-        fetchAttendances({
-            employee_id: employee.id,
-        });
-    };
-
     const handlePerPage = (value: number) => {
         setPerPage(value);
 
         fetchAttendances({
+            ...queryParams,
             per_page: value,
         });
     };
@@ -135,7 +143,7 @@ const Index = ({ attendances, employees, start_date, end_date, summary, filters 
                 <SearchSelect
                     options={employees}
                     value={selectedEmployee}
-                    onChange={handleFilter}
+                    onChange={handleEmployeeChange}
                     getLabel={(employee) => employee.name}
                     getValue={(employee) => employee.id.toString()}
                     placeholder="Pilih Karyawan"

@@ -46,8 +46,8 @@ const ListFilterAttendance = ({ attendances, from, salary = 0, summary, onDelete
                         ))}
                     </TableRow>
                 </TableHeader>
-                <TableBody>
-                    {loading ? (
+                {loading ? (
+                    <TableBody>
                         <TableRow>
                             <TableCell colSpan={headerColumns.length} className="py-10">
                                 <div className="flex items-center justify-center">
@@ -55,78 +55,84 @@ const ListFilterAttendance = ({ attendances, from, salary = 0, summary, onDelete
                                 </div>
                             </TableCell>
                         </TableRow>
-                    ) : attendances.length > 0 ? (
-                        attendances.map((attendance, index) => (
-                            <TableRow key={attendance.id}>
-                                <TableCell>{from + index}</TableCell>
-                                <TableCell>{attendance.description}</TableCell>
-                                <TableCell>{formatDate(attendance.date)}</TableCell>
-                                <TableCell
-                                    className={`${attendance.type === 'surplus' ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}
-                                >
-                                    {attendance.type === 'surplus' ? '+' : '-'} {RupiahCurrency(attendance.amount)}
-                                </TableCell>
-                                <TableCell>
-                                    <div className="flex w-10 items-center justify-center gap-1">
-                                        <Button
-                                            variant="ghost"
-                                            size="icon-sm"
-                                            className="cursor-pointer bg-amber-500/60 dark:bg-amber-500/40"
-                                            asChild
+                    </TableBody>
+                ) : (
+                    <>
+                        <TableBody>
+                            {attendances.length > 0 ? (
+                                attendances.map((attendance, index) => (
+                                    <TableRow key={attendance.id}>
+                                        <TableCell>{from + index}</TableCell>
+                                        <TableCell>{attendance.description}</TableCell>
+                                        <TableCell>{formatDate(attendance.date)}</TableCell>
+                                        <TableCell
+                                            className={`${attendance.type === 'surplus' ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}
                                         >
-                                            <Link href={route('filter-attendances.edit', { filter_attendance: attendance.id, ...query })}>
-                                                <Pen />
-                                            </Link>
-                                        </Button>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon-sm"
-                                            className="cursor-pointer bg-red-500/60 dark:bg-red-500/40"
-                                            onClick={() => onDelete(attendance)}
-                                        >
-                                            <Trash />
-                                        </Button>
+                                            {attendance.type === 'surplus' ? '+' : '-'} {RupiahCurrency(attendance.amount)}
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex w-10 items-center justify-center gap-1">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon-sm"
+                                                    className="cursor-pointer bg-amber-500/60 dark:bg-amber-500/40"
+                                                    asChild
+                                                >
+                                                    <Link href={route('filter-attendances.edit', { filter_attendance: attendance.id, ...query })}>
+                                                        <Pen />
+                                                    </Link>
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon-sm"
+                                                    className="cursor-pointer bg-red-500/60 dark:bg-red-500/40"
+                                                    onClick={() => onDelete(attendance)}
+                                                >
+                                                    <Trash />
+                                                </Button>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={headerColumns.length} className="text-muted-foreground h-24 text-center">
+                                        Tidak ada data absensi.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TableCell colSpan={headerColumns.length}>
+                                    <div className="ml-auto w-full max-w-md space-y-2">
+                                        <div className="flex justify-between">
+                                            <span className="text-muted-foreground">Gaji Pokok</span>
+                                            <span>{RupiahCurrency(salary)}</span>
+                                        </div>
+
+                                        <div className="flex justify-between">
+                                            <span className="text-muted-foreground">Total Bonus</span>
+                                            <span className="text-emerald-600">+{RupiahCurrency(total_surplus)}</span>
+                                        </div>
+
+                                        <div className="flex justify-between">
+                                            <span className="text-muted-foreground">Total Potongan</span>
+                                            <span className="text-red-600">-{RupiahCurrency(total_minus)}</span>
+                                        </div>
+
+                                        <div className="border-t pt-2">
+                                            <div className="flex justify-between text-lg font-bold">
+                                                <span>Total Gaji</span>
+                                                <span>{RupiahCurrency(pay_total)}</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </TableCell>
                             </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={headerColumns.length} className="text-muted-foreground h-24 text-center">
-                                Tidak ada data absensi.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-                <TableFooter>
-                    <TableRow>
-                        <TableCell colSpan={headerColumns.length}>
-                            <div className="ml-auto w-full max-w-md space-y-2">
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Gaji Pokok</span>
-                                    <span>{RupiahCurrency(salary)}</span>
-                                </div>
-
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Total Bonus</span>
-                                    <span className="text-emerald-600">+{RupiahCurrency(total_surplus)}</span>
-                                </div>
-
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Total Potongan</span>
-                                    <span className="text-red-600">-{RupiahCurrency(total_minus)}</span>
-                                </div>
-
-                                <div className="border-t pt-2">
-                                    <div className="flex justify-between text-lg font-bold">
-                                        <span>Total Gaji</span>
-                                        <span>{RupiahCurrency(pay_total)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </TableCell>
-                    </TableRow>
-                </TableFooter>
+                        </TableFooter>
+                    </>
+                )}
             </Table>
         </>
     );

@@ -15,15 +15,16 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field } from '@/components/ui/field';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import AppLayout from '@/layouts/app-layout';
 import { formatDate } from '@/lib/date';
 import { BreadcrumbItem, ResponsePagination } from '@/types';
 import { Attendance } from '@/types/attendance';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
@@ -81,6 +82,16 @@ const Index = ({ attendances, employees, start_date, end_date, summary, filters 
         employee_id: filters.employee_id,
         start_date: filters.start_date,
         end_date: filters.end_date,
+        per_page: filters.per_page,
+        search: filters.search,
+    };
+
+    const queryParams = {
+        employee_id: selectedEmployee?.id,
+        start_date: range?.from ? format(range.from, 'yyyy-MM-dd') : undefined,
+        end_date: range?.to ? format(range.to, 'yyyy-MM-dd') : undefined,
+        search,
+        per_page: perPage,
     };
 
     const fetchAttendances = (params: Partial<typeof filters> = {}) => {
@@ -103,42 +114,47 @@ const Index = ({ attendances, employees, start_date, end_date, summary, filters 
         );
     };
 
+    const handleEmployeeChange = (employee: EmployeeProps) => {
+        setSelectedEmployee(employee);
+
+        fetchAttendances({
+            ...queryParams,
+            employee_id: employee.id,
+        });
+    };
+
+    const handleDateRangeChange = (value: DateRange) => {
+        if (!selectedEmployee) {
+            return;
+        }
+
+        setRange(value);
+
+        if (value?.from && value?.to) {
+            fetchAttendances({
+                ...queryParams,
+                start_date: format(value.from, 'yyyy-MM-dd'),
+                end_date: format(value.to, 'yyyy-MM-dd'),
+            });
+        }
+    };
+
     useEffect(() => {
         const timeout = setTimeout(() => {
             fetchAttendances({
+                ...queryParams,
                 search,
-                start_date: range?.from ? format(range.from, 'yyyy-MM-dd') : filters.start_date,
-                end_date: range?.to ? format(range.to, 'yyyy-MM-dd') : filters.end_date,
             });
         }, 300);
 
         return () => clearTimeout(timeout);
     }, [search]);
 
-    const handleEmployeeChange = (employee: EmployeeProps | null) => {
-        setSelectedEmployee(employee);
-    };
-
-    const handleFilter = () => {
-        if (!selectedEmployee) {
-            return;
-        }
-
-        if (!range?.from || !range?.to) {
-            return;
-        }
-
-        fetchAttendances({
-            employee_id: selectedEmployee.id,
-            start_date: format(range.from, 'yyyy-MM-dd'),
-            end_date: format(range.to, 'yyyy-MM-dd'),
-        });
-    };
-
     const handlePerPage = (value: number) => {
         setPerPage(value);
 
         fetchAttendances({
+            ...queryParams,
             per_page: value,
         });
     };
@@ -186,20 +202,19 @@ const Index = ({ attendances, employees, start_date, end_date, summary, filters 
                                         <Button variant="outline" className="cursor-pointer p-5">
                                             {range?.from
                                                 ? range.to
-                                                    ? `${format(range.from, 'dd/MM/yyyy')} - ${format(range.to, 'dd/MM/yyyy')}`
-                                                    : format(range.from, 'dd/MM/yyyy')
+                                                    ? `${format(range.from, 'd MMMM yyyy', { locale: id })} - ${format(range.to, 'd MMMM yyyy', {
+                                                          locale: id,
+                                                      })}`
+                                                    : format(range.from, 'd MMMM yyyy', { locale: id })
                                                 : 'Pilih rentang tanggal'}
                                         </Button>
                                     </PopoverTrigger>
 
                                     <PopoverContent className="w-auto p-0">
-                                        <Calendar mode="range" selected={range} onSelect={setRange} numberOfMonths={2} />
+                                        <Calendar mode="range" selected={range} onSelect={handleDateRangeChange} numberOfMonths={2} />
                                     </PopoverContent>
                                 </Popover>
                             </Field>
-                            <Button onClick={handleFilter} className="cursor-pointer p-5">
-                                Filter Absensi
-                            </Button>
                         </div>
                     </CardContent>
                 </Card>
@@ -207,13 +222,6 @@ const Index = ({ attendances, employees, start_date, end_date, summary, filters 
                 <Card>
                     <CardHeader className="border-sidebar-border/90 dark:border-sidebar-border mb-3 border-b">
                         <CardTitle>Filter Data Absensi</CardTitle>
-                        {isFiltered && (
-                            <CardAction>
-                                <Button size="lg" asChild>
-                                    <Link href={route('filter-attendances.create', query)}>Tambah Data</Link>
-                                </Button>
-                            </CardAction>
-                        )}
                     </CardHeader>
                     <CardContent className="space-y-6 pb-4">
                         {isFiltered ? (

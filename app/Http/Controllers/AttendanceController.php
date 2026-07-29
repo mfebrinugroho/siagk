@@ -36,6 +36,7 @@ class AttendanceController extends Controller
         $end = null;
 
         $employees = Employee::select('id', 'name', 'position', 'pay_date', 'salary')
+            ->where('is_active', 1)
             ->orderBy('name')
             ->get();
 
