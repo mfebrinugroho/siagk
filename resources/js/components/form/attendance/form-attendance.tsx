@@ -48,11 +48,11 @@ const FormAttendance = ({ form, onSubmit }: AttendanceFormProps) => {
                 </div>
                 <div>
                     <Field data-invalid={!!form.errors.position}>
-                        <FieldLabel htmlFor="name">Nama</FieldLabel>
+                        <FieldLabel htmlFor="position">Jabatan</FieldLabel>
                         <Input
                             id="position"
                             type="text"
-                            placeholder="Nama"
+                            placeholder="Jabatan"
                             value={form.data.position}
                             onChange={(e) => form.setData('position', e.target.value)}
                             aria-invalid={!!form.errors.position}
@@ -149,7 +149,7 @@ const FormAttendance = ({ form, onSubmit }: AttendanceFormProps) => {
                     </Link>
                 </Button>
                 <Button type="submit" size="lg" className="cursor-pointer px-8 py-4" disabled={form.processing}>
-                    {form.processing && <Spinner data-icon="inline-start" className="text-center" />}
+                    {form.processing && <Spinner />}
                     {form.processing ? 'Menyimpan...' : 'Simpan'}
                 </Button>
             </div>

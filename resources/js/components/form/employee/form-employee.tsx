@@ -215,7 +215,7 @@ const FormEmployee = ({ form, onSubmit }: EmployeeFormProps) => {
                     <Link href={route('employees.index')}>Kembali</Link>
                 </Button>
                 <Button type="submit" size="lg" className="cursor-pointer px-8 py-4" disabled={form.processing}>
-                    {form.processing && <Spinner data-icon="inline-start" className="text-center" />}
+                    {form.processing && <Spinner />}
                     {form.processing ? 'Menyimpan...' : 'Simpan'}
                 </Button>
             </div>

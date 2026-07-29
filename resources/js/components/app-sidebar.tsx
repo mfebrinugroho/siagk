@@ -6,26 +6,29 @@ import { Link } from '@inertiajs/react';
 import { Calendar, LayoutGrid, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 
-const mainNavItems: NavItem[] = [
+const dashboardNavItems: NavItem[] = [
     {
-        title: 'Dashboards',
+        title: 'Dashboard',
         url: '/dashboard',
         icon: LayoutGrid,
     },
+];
+
+const mainNavItems: NavItem[] = [
     {
         title: 'Karyawan',
-        url: route('employees.index'),
+        url: '/employees',
         icon: Users,
     },
 
     {
         title: 'Absensi',
-        url: route('attendances.index'),
+        url: '/attendances',
         icon: Calendar,
     },
     {
         title: 'Filter Absensi',
-        url: route('filter-attendances.index'),
+        url: '/filter-attendances',
         icon: Calendar,
     },
 ];
@@ -46,7 +49,8 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain header="Platform" items={dashboardNavItems} />
+                <NavMain header="Menu" items={mainNavItems} />
             </SidebarContent>
 
             <SidebarFooter>
