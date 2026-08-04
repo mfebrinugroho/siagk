@@ -13,12 +13,12 @@ class AttendanceController extends Controller
     {
         $today = now();
 
-        if ($today->day > $payday) {
-            $start = $today->copy()->day($payday + 1)->startOfDay();
-            $end = $today->copy()->addMonth()->day($payday)->endOfDay();
+        if ($today->day >= $payday) {
+            $start = $today->copy()->subMonth()->day($payday)->startOfDay();
+            $end = $today->copy()->day($payday)->subDay()->endOfDay();
         } else {
-            $start = $today->copy()->subMonth()->day($payday + 1)->startOfDay();
-            $end = $today->copy()->day($payday)->endOfDay();
+            $start = $today->copy()->subMonths(2)->day($payday)->startOfDay();
+            $end = $today->copy()->subMonth()->day($payday)->subDay()->endOfDay();
         }
 
         return [$start, $end];
@@ -36,13 +36,13 @@ class AttendanceController extends Controller
         $end = null;
 
         $employees = Employee::select('id', 'name', 'position', 'pay_date', 'salary')
-            ->where('is_active', 1)
+            ->where('is_active', true)
             ->orderBy('name')
             ->get();
 
         $employee = Employee::find($request->integer('employee_id'));
 
-        $query = Attendance::query();
+        $query = Attendance::with('payroll');
 
         $totalSurplus = 0;
         $totalMinus = 0;

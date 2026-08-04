@@ -23,6 +23,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('attendances', AttendanceController::class);
     Route::resource('filter-attendances', FilterAttendanceController::class);
     Route::resource('payrolls', PayrollController::class);
+    Route::patch('/payrolls/{payroll}/paid', [PayrollController::class, 'paid'])
+        ->name('payrolls.paid');
 });
 
 require __DIR__ . '/settings.php';

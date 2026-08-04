@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Payroll extends Model
@@ -20,8 +21,13 @@ class Payroll extends Model
         'paid_at'
     ];
 
-    public function attendance(): HasMany
+    public function attendances(): HasMany
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    public function employee(): BelongsTo
+    {
+        return $this->belongsTo(Employee::class);
     }
 }

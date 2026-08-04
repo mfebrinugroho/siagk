@@ -17,7 +17,7 @@ class FilterAttendanceController extends Controller
         $end_date = $request->string('end_date');
 
         $employees = Employee::select('id', 'name', 'position', 'pay_date', 'salary')
-            ->where('is_active', 1)
+            ->where('is_active', true)
             ->orderBy('name')
             ->get();
 

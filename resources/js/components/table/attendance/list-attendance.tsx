@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -26,6 +27,7 @@ const ListAttendance = ({ attendances, from, salary, summary, onDelete, loading 
         { key: 'description', label: 'Keterangan' },
         { key: 'date', label: 'Tanggal' },
         { key: 'amount', label: 'Nominal' },
+        { key: 'status', label: 'Status' },
         { key: 'action', label: 'Aksi' },
     ];
 
@@ -64,6 +66,15 @@ const ListAttendance = ({ attendances, from, salary, summary, onDelete, loading 
                                             className={`${attendance.type === 'surplus' ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}
                                         >
                                             {attendance.type === 'surplus' ? '+' : '-'} {RupiahCurrency(attendance.amount)}
+                                        </TableCell>
+                                        <TableCell>
+                                            {attendance.payroll?.status === 'pending' ? (
+                                                <Badge className="bg-yellow-500">Pending</Badge>
+                                            ) : attendance.payroll?.status === 'paid' ? (
+                                                <Badge className="bg-green-500">Terbayarkan</Badge>
+                                            ) : (
+                                                <Badge className="bg-red-500">Belum Dibayar</Badge>
+                                            )}
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex w-10 items-center justify-center gap-1">

@@ -10,6 +10,7 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
+    AlertDialogMedia,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, ResponsePagination } from '@/types';
 import { Employee } from '@/types/employee';
 import { Head, Link, router } from '@inertiajs/react';
+import { Trash2Icon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -36,7 +38,7 @@ type Props = {
 };
 
 const Index = ({ employees, filters }: Props) => {
-    const { data, links } = employees;
+    const { data, links, from } = employees;
     const [openDel, setOpenDel] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
     const [search, setSearch] = useState(filters.search ?? '');
@@ -111,26 +113,28 @@ const Index = ({ employees, filters }: Props) => {
                                 <PerPageInput value={perPage} onChange={handlePerPage} />
                                 <SearchInput value={search} onChange={setSearch} />
                             </div>
-                            <ListEmployee employees={data} onDelete={handleOpenDelete} />
+                            <ListEmployee employees={data} onDelete={handleOpenDelete} from={from} />
                             <PaginationTable links={links} />
                         </CardContent>
                     </Card>
                 </div>
 
                 <AlertDialog open={openDel} onOpenChange={setOpenDel}>
-                    <AlertDialogContent>
+                    <AlertDialogContent size="sm">
                         <AlertDialogHeader>
-                            <AlertDialogTitle>Hapus Data</AlertDialogTitle>
-
+                            <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                                <Trash2Icon />
+                            </AlertDialogMedia>
+                            <AlertDialogTitle>Hapus Data?</AlertDialogTitle>
                             <AlertDialogDescription>
                                 Yakin ingin menghapus <strong>{selectedEmployee?.name}</strong>?
                             </AlertDialogDescription>
                         </AlertDialogHeader>
-
                         <AlertDialogFooter>
-                            <AlertDialogCancel className="cursor-pointer">Batal</AlertDialogCancel>
-
-                            <AlertDialogAction onClick={handleDelete} className="cursor-pointer">
+                            <AlertDialogCancel variant="outline" className="cursor-pointer">
+                                Batal
+                            </AlertDialogCancel>
+                            <AlertDialogAction variant="destructive" className="cursor-pointer" onClick={handleDelete}>
                                 Hapus
                             </AlertDialogAction>
                         </AlertDialogFooter>

@@ -11,6 +11,7 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
+    AlertDialogMedia,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,7 @@ import { Attendance } from '@/types/attendance';
 import { Head, router } from '@inertiajs/react';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
+import { Trash2Icon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
@@ -272,19 +274,21 @@ const Index = ({ attendances, employees, start_date, end_date, summary, filters 
             </div>
 
             <AlertDialog open={openDel} onOpenChange={setOpenDel}>
-                <AlertDialogContent>
+                <AlertDialogContent size="sm">
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Hapus Data</AlertDialogTitle>
-
+                        <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                            <Trash2Icon />
+                        </AlertDialogMedia>
+                        <AlertDialogTitle>Hapus Data?</AlertDialogTitle>
                         <AlertDialogDescription>
                             Yakin ingin menghapus <strong>{selectedAttendance?.description}</strong>?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
-
                     <AlertDialogFooter>
-                        <AlertDialogCancel className="cursor-pointer">Batal</AlertDialogCancel>
-
-                        <AlertDialogAction onClick={handleDelete} className="cursor-pointer">
+                        <AlertDialogCancel variant="outline" className="cursor-pointer">
+                            Batal
+                        </AlertDialogCancel>
+                        <AlertDialogAction variant="destructive" className="cursor-pointer" onClick={handleDelete}>
                             Hapus
                         </AlertDialogAction>
                     </AlertDialogFooter>

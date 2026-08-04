@@ -110,14 +110,22 @@ export default function Dashboard({ total_employee, employees, filters }: Props)
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {employees.data.map((employee, index) => (
-                                        <TableRow key={employee.id}>
-                                            <TableCell>{employees.from + index}</TableCell>
-                                            <TableCell>{employee.name}</TableCell>
-                                            <TableCell>{employee.position}</TableCell>
-                                            <TableCell>{payDate(employee.pay_date)}</TableCell>
+                                    {employees.data.length > 0 ? (
+                                        employees.data.map((employee, index) => (
+                                            <TableRow key={employee.id}>
+                                                <TableCell>{employees.from + index}</TableCell>
+                                                <TableCell>{employee.name}</TableCell>
+                                                <TableCell>{employee.position}</TableCell>
+                                                <TableCell>{payDate(employee.pay_date)}</TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={headerColumns.length} className="text-muted-foreground text-center">
+                                                Tidak ada karyawan yang gajian pada hari ini.
+                                            </TableCell>
                                         </TableRow>
-                                    ))}
+                                    )}
                                 </TableBody>
                             </Table>
                             <PaginationTable links={employees.links} />

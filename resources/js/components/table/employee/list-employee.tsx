@@ -8,10 +8,12 @@ import { Eye, Pen, Trash } from 'lucide-react';
 interface Props {
     employees: Employee[];
     onDelete: (employee: Employee) => void;
+    from: number;
 }
 
-const ListEmployee = ({ employees, onDelete }: Props) => {
+const ListEmployee = ({ employees, onDelete, from }: Props) => {
     const headerColumns = [
+        { key: 'number', label: '#' },
         { key: 'name', label: 'Nama' },
         { key: 'position', label: 'Jabatan' },
         { key: 'pay_date', label: 'Tgl Gajian' },
@@ -31,8 +33,9 @@ const ListEmployee = ({ employees, onDelete }: Props) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {employees.map((employee) => (
+                    {employees.map((employee, index) => (
                         <TableRow key={employee.id}>
+                            <TableCell>{from + index}</TableCell>
                             <TableCell>{employee.name}</TableCell>
                             <TableCell>{employee.position}</TableCell>
                             <TableCell>{payDate(employee.pay_date)}</TableCell>

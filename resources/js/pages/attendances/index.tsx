@@ -11,6 +11,7 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
+    AlertDialogMedia,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ import { formatDate } from '@/lib/date';
 import { BreadcrumbItem, ResponsePagination } from '@/types';
 import { Attendance } from '@/types/attendance';
 import { Head, Link, router } from '@inertiajs/react';
+import { Trash2Icon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface EmployeeProps {
@@ -55,6 +57,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const Index = ({ attendances, employees, start_date, end_date, summary, filters }: Props) => {
+    // console.log(attendances);
     const { data, links, from } = attendances;
     const [selectedEmployee, setSelectedEmployee] = useState<EmployeeProps | null>(employees.find((e) => e.id === filters.employee_id) ?? null);
     const [search, setSearch] = useState(filters.search ?? '');
@@ -214,19 +217,21 @@ const Index = ({ attendances, employees, start_date, end_date, summary, filters 
             </div>
 
             <AlertDialog open={openDel} onOpenChange={setOpenDel}>
-                <AlertDialogContent>
+                <AlertDialogContent size="sm">
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Hapus Data</AlertDialogTitle>
-
+                        <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                            <Trash2Icon />
+                        </AlertDialogMedia>
+                        <AlertDialogTitle>Hapus Data?</AlertDialogTitle>
                         <AlertDialogDescription>
                             Yakin ingin menghapus <strong>{selectedAttendance?.description}</strong>?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
-
                     <AlertDialogFooter>
-                        <AlertDialogCancel className="cursor-pointer">Batal</AlertDialogCancel>
-
-                        <AlertDialogAction onClick={handleDelete} className="cursor-pointer">
+                        <AlertDialogCancel variant="outline" className="cursor-pointer">
+                            Batal
+                        </AlertDialogCancel>
+                        <AlertDialogAction variant="destructive" className="cursor-pointer" onClick={handleDelete}>
                             Hapus
                         </AlertDialogAction>
                     </AlertDialogFooter>

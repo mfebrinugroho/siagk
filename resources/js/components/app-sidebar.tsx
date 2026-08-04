@@ -33,7 +33,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Penggajian',
-        url: '/payrolls',
+        url: '/payrolls?tab=unprocesseds',
         icon: CircleDollarSign,
     },
 ];
